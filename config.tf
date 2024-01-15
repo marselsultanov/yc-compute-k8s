@@ -73,7 +73,7 @@ resource "yandex_compute_instance_group" "k8s-node" {
     }
 
     network_interface {
-      subnet_ids = ["e9b48pmccvr59607kr9n","e2lfpek6fb5m52cem7i4","b0cbts9154diqk502o83"]
+      subnet_ids = ["e9b48pmccvr59607kr9n","e2lfpek6fb5m52cem7i4","fl8dhrhm00kfh51l9cln"]
     }
 
     metadata = {
@@ -88,7 +88,7 @@ resource "yandex_compute_instance_group" "k8s-node" {
   }
 
   allocation_policy {
-    zones = ["ru-central1-a","ru-central1-b","ru-central1-c"]
+    zones = ["ru-central1-a","ru-central1-b","ru-central1-d"]
   }
 
   deploy_policy {
