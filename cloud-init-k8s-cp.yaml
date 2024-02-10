@@ -1,0 +1,52 @@
+#cloud-config
+package_upgrade: true
+yum_repos:
+  docker-ce:
+    name: Docker CE Stable - $basearch
+    baseurl: https://download.docker.com/linux/centos/9/x86_64/stable
+    enabled: true
+    gpgcheck: true
+    gpgkey: https://download.docker.com/linux/centos/gpg
+  kubernetes:
+    name: Kubernetes
+    baseurl: https://pkgs.k8s.io/core:/stable:/v1.29/rpm/
+    enabled: true
+    gpgcheck: true
+    gpgkey: https://pkgs.k8s.io/core:/stable:/v1.29/rpm/repodata/repomd.xml.key
+    exclude: kubelet kubeadm kubectl cri-tools kubernetes-cni
+packages:
+  #- debugtools
+runcmd:
+  # Swap is disabled in this image
+  # - swapoff -a
+  # - sed -i '/ swap, / s/^/#/' /etc/fstab
+
+  # Firewalld isn't installed in this image
+  # - systemctl stop firewalld
+  # - systemctl disable firewalld
+
+  # Disable selinux
+  - setenforce 0
+  - sed -i 's/^SELINUX=enforcing/SELINUX=permissive/' /etc/selinux/config
+
+  # Install and configure containerd
+  - yum install -y containerd.io
+  - modprobe br_netfilter
+  - modprobe overlay
+  - echo br_netfilter > /etc/modules-load.d/k8s.conf
+  - echo overlay >> /etc/modules-load.d/k8s.conf
+  - echo net.bridge.bridge-nf-call-iptables > /etc/sysctl.d/k8s.conf
+  - echo net.bridge.bridge-nf-call-ip6tables >> /etc/sysctl.d/k8s.conf
+  - echo net.ipv4.ip_forward >> /etc/sysctl.d/k8s.conf
+  - sysctl --system
+  - containerd config default > /etc/containerd/config.toml
+  - sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/' /etc/containerd/config.toml
+  - systemctl start containerd
+  - systemctl enable containerd
+
+  # Install kubeadm, kubelet and kubectl
+  - yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
+
+  # Configure crictl
+  - [sh, -c, "echo runtime-endpoint: unix:///run/containerd/containerd.sock > /etc/crictl.yaml"]
+  - [sh, -c, "echo image-endpoint: unix:///run/containerd/containerd.sock >> /etc/crictl.yaml"]

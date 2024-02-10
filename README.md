@@ -1,6 +1,6 @@
 # yc-compute-k8s
 Prerequisites:
-1. VPC network (default) and subnet (default-ru-central1-a with 10.1.0.0/24)
+1. VPC network (default) and subnet (default-ru-central1-a with 10.0.0.0/24)
 2. VM with public ip (ssh-proxy)
 3. Service account (terraform)
 
