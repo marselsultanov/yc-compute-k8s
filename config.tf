@@ -41,6 +41,7 @@ resource "yandex_compute_instance_group" "k8s-control" {
 
     network_interface {
       subnet_ids = ["e9b48pmccvr59607kr9n"]
+      ip_address = "172.18.62.150"
     }
 
     metadata = {
