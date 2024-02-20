@@ -6,10 +6,8 @@ Prerequisites:
 4. Service account (for terraform)
 
 Don't forget to replace with yours:
-1. cloud_id
-2. folder_id
-3. service_account_key_file
-4. service_account_id
+1. cloud_id and folder_id
+3. service_account_key_file and service_account_id
 5. subnet_ids
 6. ip_address (also in kubeadm-config.yaml)
 7. ssh-keys
