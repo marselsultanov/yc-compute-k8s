@@ -15,6 +15,7 @@ provider "yandex" {
 resource "yandex_compute_instance_group" "k8s-control" {
   name = "k8s-control"
   service_account_id = "ajeo5kgduc596eg0tcfs"
+  for_each = toset(["cloud-init-k8s-prerequisites.yaml"])
 
   instance_template {
     name = "k8s-control-{instance.index}"
@@ -46,7 +47,7 @@ resource "yandex_compute_instance_group" "k8s-control" {
 
     metadata = {
       ssh-keys = "almalinux:${file("~/.ssh/id_ed25519.pub")}"
-      user-data = file("cloud-init-k8s-cp.yaml")
+      user-data = templatefile(each.key, {kubernetes_version = "1.29"})
     }
   }
 

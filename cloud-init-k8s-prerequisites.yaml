@@ -1,5 +1,5 @@
 #cloud-config
-package_upgrade: true
+#package_upgrade: true
 yum_repos:
   docker-ce:
     name: Docker CE Stable - $basearch
@@ -9,13 +9,17 @@ yum_repos:
     gpgkey: https://download.docker.com/linux/centos/gpg
   kubernetes:
     name: Kubernetes
-    baseurl: https://pkgs.k8s.io/core:/stable:/v1.29/rpm/
+    baseurl: https://pkgs.k8s.io/core:/stable:/v${kubernetes_version}/rpm/
     enabled: true
     gpgcheck: true
-    gpgkey: https://pkgs.k8s.io/core:/stable:/v1.29/rpm/repodata/repomd.xml.key
+    gpgkey: https://pkgs.k8s.io/core:/stable:/v${kubernetes_version}/rpm/repodata/repomd.xml.key
     exclude: kubelet kubeadm kubectl cri-tools kubernetes-cni
 packages:
   #- debugtools
+write_files:
+  - encoding: base64
+    content: ${base64encode(file("kubeadm-config.yaml"))}
+    path: /etc/kubernetes/kubeadm-config.yaml
 runcmd:
   # Swap is disabled in this image
   # - swapoff -a

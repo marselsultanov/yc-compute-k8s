@@ -1,28 +1,28 @@
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: InitConfiguration
 localAPIEndpoint:
-  advertiseAddress: 172.18.62.150
+  advertiseAddress: "172.18.62.150"
   bindPort: 6443
 nodeRegistration:
   criSocket: "unix:///var/run/containerd/containerd.sock"
-  imagePullPolicy: IfNotPresent
-  name: k8s-control-1
+  imagePullPolicy: "IfNotPresent"
+  name: "k8s-control-1"
   taints:
     - effect: NoSchedule
       key: node-role.kubernetes.io/control-plane
 ---
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: ClusterConfiguration
-certificatesDir: /etc/kubernetes/pki
-clusterName: cluster.local
+certificatesDir: "/etc/kubernetes/pki"
+clusterName: "cluster.local"
 etcd:
   local:
-    dataDir: /var/lib/etcd
+    dataDir: "/var/lib/etcd"
 imageRepository: "registry.k8s.io"
 kubernetesVersion: "1.29.1"
-controlPlaneEndpoint: 172.18.62.150:6443
+controlPlaneEndpoint: "172.18.62.150:6443"
 networking:
-  dnsDomain: cluster.local
+  dnsDomain: "cluster.local"
   podSubnet: "192.168.0.0/16"
   serviceSubnet: "172.16.0.0/12"
 ---
