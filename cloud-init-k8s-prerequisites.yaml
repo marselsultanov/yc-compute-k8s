@@ -1,6 +1,9 @@
 #cloud-config
 #package_upgrade: true
 
+packages:
+  - bash-completion
+
 yum_repos:
   docker-ce:
     name: Docker CE Stable - $basearch
@@ -16,13 +19,14 @@ yum_repos:
     gpgkey: https://pkgs.k8s.io/core:/stable:/v1.29/rpm/repodata/repomd.xml.key
     exclude: kubelet kubeadm kubectl cri-tools kubernetes-cni
 
-packages:
-  - bash-completion
-
 write_files:
   - encoding: base64
     content: ${base64encode(file("kubeadm-config.yaml"))}
     path: /etc/kubernetes/kubeadm-config.yaml
+  - encoding: base64
+    content: ${base64encode(file("~/.ssh/id_ed25519"))}
+    path: /root/.ssh/id_ed25519
+    permissions: '0600'
 
 runcmd:
   # Swap is disabled in this image
@@ -37,7 +41,7 @@ runcmd:
   - setenforce 0
   - sed -i 's/^SELINUX=enforcing/SELINUX=permissive/' /etc/selinux/config
 
-  # Install and configure cri (containerd)
+  # Install and configure containerd (cri)
   - yum install -y containerd.io
   - modprobe br_netfilter
   - modprobe overlay

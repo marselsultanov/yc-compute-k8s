@@ -24,7 +24,7 @@ resource "yandex_compute_instance_group" "k8s-control" {
     resources {
       cores = "2"
       memory = "4"
-      core_fraction = "20"
+      core_fraction = "50"
     }
 
     scheduling_policy {
@@ -41,12 +41,12 @@ resource "yandex_compute_instance_group" "k8s-control" {
 
     network_interface {
       subnet_ids = ["e9b48pmccvr59607kr9n"]
-      ip_address = "172.18.62.150"
+      ip_address = "172.18.62.155"
     }
 
     metadata = {
       ssh-keys = "almalinux:${file("~/.ssh/id_ed25519.pub")}"
-      user-data = format("%s\n\n%s", templatefile("cloud-init-k8s-prerequisites.yaml", {}), file("cloud-init-k8s-cp.yaml"))
+      user-data = format("%s\n\n%s", templatefile("cloud-init-k8s-prerequisites.yaml", {}), file("cloud-init-k8s-control.yaml"))
     }
   }
 
@@ -78,7 +78,7 @@ resource "yandex_compute_instance_group" "k8s-worker" {
     resources {
       cores = "2"
       memory = "8"
-      core_fraction = "20"
+      core_fraction = "50"
     }
 
     scheduling_policy {
@@ -94,22 +94,23 @@ resource "yandex_compute_instance_group" "k8s-worker" {
     }
 
     network_interface {
-      subnet_ids = ["e9b48pmccvr59607kr9n","e2lfpek6fb5m52cem7i4","fl8dhrhm00kfh51l9cln"]
+      subnet_ids = ["e9b48pmccvr59607kr9n"]
     }
 
     metadata = {
       ssh-keys = "almalinux:${file("~/.ssh/id_ed25519.pub")}"
+      user-data = format("%s\n\n%s", templatefile("cloud-init-k8s-prerequisites.yaml", {}), file("cloud-init-k8s-worker.yaml"))
     }
   }
 
   scale_policy {
     fixed_scale {
-      size = 0
+      size = 1
     }
   }
 
   allocation_policy {
-    zones = ["ru-central1-a","ru-central1-b","ru-central1-d"]
+    zones = ["ru-central1-a"]
   }
 
   deploy_policy {

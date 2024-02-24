@@ -1,7 +1,8 @@
   # Install control plane
   - kubeadm init --config /etc/kubernetes/kubeadm-config.yaml
 
-  # Configure kubectl temporary for root
+  # Configure kubectl for root
+  - export HOME=/root
   - mkdir -p $HOME/.kube
   - cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 
@@ -13,6 +14,6 @@
   - echo "alias k=kubectl" >> /home/almalinux/.bashrc
   - echo "complete -o default -F __start_kubectl k" >> /home/almalinux/.bashrc
 
-  # Install cri (calico)
+  # Install calico (cri)
   - kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.2/manifests/tigera-operator.yaml
   - kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.2/manifests/custom-resources.yaml

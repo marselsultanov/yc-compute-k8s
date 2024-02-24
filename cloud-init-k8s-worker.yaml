@@ -1,0 +1,4 @@
+  # Install worker node
+  - curl --retry 60 --retry-delay 10 --retry-connrefused k8s-control-1:6443
+  - sleep 10
+  - ssh -o "StrictHostKeyChecking no" almalinux@k8s-control-1 kubeadm token create --print-join-command | sh
