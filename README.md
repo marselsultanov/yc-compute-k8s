@@ -19,5 +19,5 @@ Connect to VMs:
 4. ssh -J ssh-proxy almalinux@k8s-worker-3
 
 After install:
-1. kubectl create secret docker-registry dockerhub --docker-server=https://index.docker.io/v1/ --docker-username=<your-name> --docker-password=<your-pword>
+1. kubectl create secret docker-registry dockerhub --docker-server=https://index.docker.io/v1/ --docker-username=<your-username> --docker-password=<your-password> --docker-email=<your-email>
 2. kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "dockerhub"}]}'

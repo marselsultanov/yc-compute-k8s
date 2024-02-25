@@ -117,4 +117,8 @@ resource "yandex_compute_instance_group" "k8s-worker" {
     max_unavailable = 0
     max_expansion   = 1
   }
+
+  load_balancer {
+    target_group_name = "k8s-worker"
+  }
 }
